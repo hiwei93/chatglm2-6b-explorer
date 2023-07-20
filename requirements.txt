@@ -7,3 +7,9 @@ sentencepiece
 accelerate
 fastapi[all]
 websockets
+gradio
+autoflake
+black
+isort
+flake8
+mypy
