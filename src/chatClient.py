@@ -1,10 +1,10 @@
+import abc
 import json
 
 from websockets.exceptions import ConnectionClosedOK
 from websockets.sync.client import connect
 
 from chatglm2_6b.modelClient import ChatGLM2
-import abc
 
 
 class ChatClient(abc.ABC):
@@ -36,10 +36,14 @@ class ChatGLM2APIClient(ChatClient):
         """chatglm2-6b 模型定义的对话方法"""
         url = f"{self.ws_url}/streamChat"
         with connect(url) as websocket:
-            msg = json.dumps({
-                "query": query, "history": history, 
-                "temperature": temperature, "top_p": top_p,
-            })
+            msg = json.dumps(
+                {
+                    "query": query,
+                    "history": history,
+                    "temperature": temperature,
+                    "top_p": top_p,
+                }
+            )
             websocket.send(msg)
 
             data = None
@@ -47,7 +51,7 @@ class ChatGLM2APIClient(ChatClient):
                 while True:
                     data = websocket.recv()
                     data = json.loads(data)
-                    yield data['resp'], data['history']
+                    yield data["resp"], data["history"]
             except ConnectionClosedOK:
                 print("generation is finished")
 
@@ -57,7 +61,9 @@ class ChatGLM2APIClient(ChatClient):
 
         prompt = format_chat_prompt(message, chat_history, instructions)
         chat_history = chat_history + [[message, ""]]
-        params = json.dumps({"prompt": prompt, "temperature": temperature, "top_p": top_p})
+        params = json.dumps(
+            {"prompt": prompt, "temperature": temperature, "top_p": top_p}
+        )
         with connect(url) as websocket:
             websocket.send(params)
 
@@ -66,7 +72,7 @@ class ChatGLM2APIClient(ChatClient):
                 while True:
                     data = websocket.recv()
                     data = json.loads(data)
-                    resp = data['text']
+                    resp = data["text"]
 
                     last_turn = list(chat_history.pop(-1))
                     last_turn[-1] = resp
@@ -82,8 +88,10 @@ class ChatGLM2ModelClient(ChatClient):
 
     def simple_chat(self, query, history, temperature, top_p):
         kwargs = {
-            "query": query, "history": history, 
-            "temperature": temperature, "top_p": top_p,
+            "query": query,
+            "history": history,
+            "temperature": temperature,
+            "top_p": top_p,
         }
         for resp, history in self.model.stream_chat(**kwargs):
             yield resp, history

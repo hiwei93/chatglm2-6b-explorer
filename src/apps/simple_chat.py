@@ -1,7 +1,9 @@
-import gradio as gr
-from chatClient import ChatClient
 import traceback
+
+import gradio as gr
+
 from apps.components import chat_accordion
+from chatClient import ChatClient
 
 BOT_NAME = "ChatGLM2-6B"
 TITLE = """<h3 align="center">🤖 通用对话</h3>"""
@@ -51,7 +53,7 @@ def chat(client: ChatClient):
             for resp, history in stream:
                 chat_history = history
                 yield chat_history
-        except Exception as e:
+        except Exception:
             if not chat_history:
                 chat_history = []
             chat_history += [["有错误了", traceback.format_exc()]]

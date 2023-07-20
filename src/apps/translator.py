@@ -18,7 +18,6 @@ translation result:"""
 
 
 def translator_demo(client):
-
     def stream_translate(input_text, temperature: float, top_p: float):
         if not input_text:
             return None
@@ -33,9 +32,9 @@ def translator_demo(client):
             for resp, _ in stream:
                 pass
             return resp
-        except Exception as e:
+        except Exception:
             return traceback.format_exc()
-    
+
     def clear_content():
         return None, None
 
@@ -46,12 +45,14 @@ def translator_demo(client):
             temperature, top_p = chat_accordion()
             with gr.Row(elem_id="button_container"):
                 with gr.Column():
-                    commit_btn = gr.Button(value="翻译", variant='primary')
+                    commit_btn = gr.Button(value="翻译", variant="primary")
                 with gr.Column():
                     clear_btn = gr.Button(value="清空")
 
         with gr.Column():
             outputs = gr.Textbox(label="译文", max_lines=5)
 
-        commit_btn.click(stream_translate, inputs=[inputs, temperature, top_p], outputs=[outputs])
+        commit_btn.click(
+            stream_translate, inputs=[inputs, temperature, top_p], outputs=[outputs]
+        )
         clear_btn.click(clear_content, inputs=None, outputs=[inputs, outputs])

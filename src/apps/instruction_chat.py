@@ -2,8 +2,8 @@ import traceback
 
 import gradio as gr
 
-from chatClient import ChatClient
 from apps.components import chat_accordion
+from chatClient import ChatClient
 
 BOT_NAME = "ChatGLM2-6B"
 TITLE = """<h3 align="center">🤗 ChatGLM2-6B 预设指令对话</h3>"""
@@ -34,18 +34,20 @@ def chat(client: ChatClient):
             with gr.Row():
                 with gr.Accordion("对话预设指令", open=True):
                     instructions = gr.Textbox(
-                            placeholder="LLM instructions",
-                            value=DEFAULT_INSTRUCTIONS,
-                            lines=10,
-                            interactive=True,
-                            label="指令",
-                            max_lines=16,
-                            show_label=False,
-                        )
+                        placeholder="LLM instructions",
+                        value=DEFAULT_INSTRUCTIONS,
+                        lines=10,
+                        interactive=True,
+                        label="指令",
+                        max_lines=16,
+                        show_label=False,
+                    )
             with gr.Row():
                 temperature, top_p = chat_accordion()
 
-    def run_chat(message: str, chat_history, instructions: str, temperature: float, top_p: float):
+    def run_chat(
+        message: str, chat_history, instructions: str, temperature: float, top_p: float
+    ):
         if not message or (message == RETRY_COMMAND and len(chat_history) == 0):
             yield chat_history
             return
@@ -67,7 +69,7 @@ def chat(client: ChatClient):
             for resp, history in stream:
                 chat_history = history
                 yield chat_history
-        except Exception as e:
+        except Exception:
             if not chat_history:
                 chat_history = []
             chat_history += [["有错误了", traceback.format_exc()]]
@@ -78,8 +80,12 @@ def chat(client: ChatClient):
             chat_history.pop(-1)
         return {chatbot: gr.update(value=chat_history)}
 
-    def run_retry(message: str, chat_history, instructions, temperature: float, top_p: float):
-        yield from run_chat(RETRY_COMMAND, chat_history, instructions, temperature, top_p)
+    def run_retry(
+        message: str, chat_history, instructions, temperature: float, top_p: float
+    ):
+        yield from run_chat(
+            RETRY_COMMAND, chat_history, instructions, temperature, top_p
+        )
 
     def clear_chat():
         return []
