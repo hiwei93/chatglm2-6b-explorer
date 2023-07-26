@@ -1,9 +1,16 @@
 from chatglm2_6b.modelClient import ChatGLM2
 from chatglm2_6b.server import runserver
+from chatglm2_6b.grpc_server import run_grpc_server
 from config import Settings
 
-chat_glm2 = ChatGLM2(Settings.CHATGLM_MODEL_PATH)
+
+server_register = {
+    "websocket": runserver,
+    "grpc": run_grpc_server,
+}
 
 
 if __name__ == "__main__":
-    runserver(chat_glm2)
+    chat_glm2 = ChatGLM2(Settings.CHATGLM_MODEL_PATH)
+    server = server_register[Settings.SERVER_TYPE]
+    server(chat_glm2)

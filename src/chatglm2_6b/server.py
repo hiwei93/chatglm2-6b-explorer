@@ -5,12 +5,9 @@ import uvicorn
 from fastapi import FastAPI, WebSocket
 from pydantic import BaseModel
 
-from chatglm2_6b.modelClient import ChatGLM2
-from config import Settings
-
 app = FastAPI()
 
-chat_glm2 = ChatGLM2(Settings.CHATGLM_MODEL_PATH)
+chat_glm2 = None
 
 
 class ChatParams(BaseModel):
@@ -51,4 +48,6 @@ async def stream_chat(websocket: WebSocket):
 
 
 def runserver(model_client):
+    global chat_glm2
+    chat_glm2 = model_client
     uvicorn.run(app, host="0.0.0.0", port=10001)

@@ -61,7 +61,3 @@ def run_grpc_server(model_client):
     server.start()
     server.wait_for_termination()
 
-
-if __name__ == '__main__':
-    from chatglm2_6b.modelClient import FakeModelClient
-    run_grpc_server(FakeModelClient())
