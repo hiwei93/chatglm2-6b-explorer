@@ -106,3 +106,24 @@ class ChatGLM2(object):
         )
         for resp, new_history in stream:
             yield resp, new_history
+
+
+class FakeModelClient(object):
+    def generate(self, **kwags):
+        return f"gRPC request generated successfully. The params are {kwags}"
+
+    def stream_generate(self, **kwags):
+        yield "gRPC request stream_generate successfully. The params are:"
+        for k, v in kwags.items():
+            yield f"{k}: {v}"
+
+    def stream_chat(self, **kwags):
+        history = kwags['history']
+        history.append([kwags['query'], ""])
+        text = "gRPC request stream_chat successfully. The params are:"
+        history[-1][-1] += text
+        yield text, history
+        for k, v in kwags.items():
+            text = f"\n{k}: {v}"
+            history[-1][-1] += text
+            yield text, history

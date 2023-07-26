@@ -1,11 +1,9 @@
-import uvicorn
+from chatglm2_6b.modelClient import ChatGLM2
+from chatglm2_6b.server import runserver
+from config import Settings
 
-from chatglm2_6b.server import app
-
-
-def runserver():
-    uvicorn.run(app, host="0.0.0.0", port=10001)
+chat_glm2 = ChatGLM2(Settings.CHATGLM_MODEL_PATH)
 
 
 if __name__ == "__main__":
-    runserver()
+    runserver(chat_glm2)

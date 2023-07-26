@@ -1,10 +1,13 @@
 import abc
 import json
 
+import grpc
 from websockets.exceptions import ConnectionClosedOK
 from websockets.sync.client import connect
 
+from chatglm2_6b.grpc_pkg import chatglm_pb2_grpc, chatglm_pb2
 from chatglm2_6b.modelClient import ChatGLM2
+import chatglm2_6b.grpc_pkg.utils as grpc_utils
 
 
 class ChatClient(abc.ABC):
@@ -80,6 +83,45 @@ class ChatGLM2APIClient(ChatClient):
                     yield resp, chat_history
             except ConnectionClosedOK:
                 print("generation is finished")
+
+
+class ChatGLM2GRPCClient(ChatClient):
+    def __init__(self, target=None):
+        self.target = "localhost:10002"
+        if target:
+            self.target = target
+        channel = grpc.insecure_channel('localhost:10002')
+        stub = chatglm_pb2_grpc.ChatGLM2RPCStub(channel)
+        self.channel = channel
+        self.stub = stub
+
+    def simple_chat(self, query, history, temperature, top_p):
+        stream = self.stub.StreamChat(chatglm_pb2.ChatRequest(
+            query=query,
+            history=grpc_utils.list2history(history),
+            do_sample=True,
+            max_length=8192,
+            temperature=temperature,
+            top_p=top_p,
+        ))
+        for resp in stream:
+            yield resp.generated_text, grpc_utils.history2list(resp.new_history)
+
+    def instruct_chat(self, message, chat_history, instructions, temperature, top_p):
+        prompt = format_chat_prompt(message, chat_history, instructions)
+        chat_history = chat_history + [[message, ""]]
+        stream = self.stub.StreamGenerate(chatglm_pb2.GenerateRequest(
+            prompt=prompt,
+            do_sample=True,
+            max_length=8192,
+            temperature=temperature,
+            top_p=top_p,
+        ))
+        for resp in stream:
+            last_turn = list(chat_history.pop(-1))
+            last_turn[-1] = resp.generated_text
+            chat_history = chat_history + [last_turn]
+            yield resp.generated_text, chat_history
 
 
 class ChatGLM2ModelClient(ChatClient):

@@ -1,6 +1,7 @@
 import functools
 
 import anyio
+import uvicorn
 from fastapi import FastAPI, WebSocket
 from pydantic import BaseModel
 
@@ -47,3 +48,7 @@ async def stream_chat(websocket: WebSocket):
     for resp, history in stream:
         await websocket.send_json({"resp": resp, "history": history})
     await websocket.close()
+
+
+def runserver(model_client):
+    uvicorn.run(app, host="0.0.0.0", port=10001)

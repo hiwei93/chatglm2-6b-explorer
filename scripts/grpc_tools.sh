@@ -1,0 +1,1 @@
+python -m grpc_tools.protoc -Isrc/chatglm2_6b/grpc_pkg --python_out=src/chatglm2_6b/grpc_pkg --pyi_out=src/chatglm2_6b/grpc_pkg --grpc_python_out=src/chatglm2_6b/grpc_pkg src/chatglm2_6b/grpc_pkg/chatglm.proto

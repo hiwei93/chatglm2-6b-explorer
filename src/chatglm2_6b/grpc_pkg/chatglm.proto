@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+message GreetRequest {
+  string name = 1;
+}
+
+message ChatHistory {
+    repeated ChatTurn turns=1;
+}
+
+message ChatTurn {
+    repeated string strings=1;
+}
+
+message GenerateResponse {
+  string generated_text = 1;
+}
+
+message GenerateRequest {
+  string prompt = 1;
+  bool do_sample = 2;
+  int32 max_length = 3;
+  float temperature = 4;
+  float top_p = 5;
+}
+
+message ChatResponse {
+  string generated_text = 1;
+  ChatHistory new_history = 2;
+}
+
+message ChatRequest {
+  string query = 1;
+  ChatHistory history = 2;
+  bool do_sample = 3;
+  int32 max_length = 4;
+  float temperature = 5;
+  float top_p = 6;
+}
+
+service ChatGLM2RPC {
+  rpc Greet(GreetRequest) returns (GenerateResponse) {}
+  rpc Generate(GenerateRequest) returns (GenerateResponse) {}
+  rpc StreamGenerate(GenerateRequest) returns (stream GenerateResponse) {}
+  rpc StreamChat(ChatRequest) returns (stream ChatResponse) {}
+}
+
+
