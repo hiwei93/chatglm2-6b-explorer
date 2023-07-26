@@ -1,7 +1,7 @@
 import gradio as gr
 
 from apps import instruction_chat_demo, simple_chat_demo, translator_demo
-from chatClient import ChatClient, ChatGLM2APIClient, ChatGLM2ModelClient
+from chatClient import ChatClient, ChatGLM2APIClient, ChatGLM2ModelClient, ChatGLM2GRPCClient
 from config import Settings
 
 TITLE = """<h2 align="center">🚀 ChatGLM2-6B apps gallery</h2>"""
@@ -37,6 +37,8 @@ def build_client():
         return ChatGLM2ModelClient(Settings.CHATGLM_MODEL_PATH)
     if client_class == "ChatGLM2APIClient":
         return ChatGLM2APIClient(Settings.MODEL_WS_URL)
+    if client_class == 'ChatGLM2GRPCClient':
+        return ChatGLM2GRPCClient(Settings.MODEL_GRPC_TARGET)
     raise Exception(f"Wrong ChatClient: {client_class}")
 
 
