@@ -118,8 +118,8 @@ class FakeModelClient(object):
             yield f"{k}: {v}"
 
     def stream_chat(self, **kwags):
-        history = kwags['history']
-        history.append([kwags['query'], ""])
+        history = kwags["history"]
+        history.append([kwags["query"], ""])
         text = "gRPC request stream_chat successfully. The params are:"
         history[-1][-1] += text
         yield text, history

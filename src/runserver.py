@@ -1,8 +1,7 @@
+from chatglm2_6b.grpc_server import run_grpc_server
 from chatglm2_6b.modelClient import ChatGLM2
 from chatglm2_6b.server import runserver
-from chatglm2_6b.grpc_server import run_grpc_server
 from config import Settings
-
 
 server_register = {
     "websocket": runserver,

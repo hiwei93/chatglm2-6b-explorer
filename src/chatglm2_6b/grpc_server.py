@@ -2,7 +2,7 @@ from concurrent import futures
 
 import grpc
 
-from chatglm2_6b.grpc_pkg import chatglm_pb2_grpc, chatglm_pb2, utils
+from chatglm2_6b.grpc_pkg import chatglm_pb2, chatglm_pb2_grpc, utils
 
 
 class ChatGLM2RPCServicer(chatglm_pb2_grpc.ChatGLM2RPCServicer):
@@ -56,8 +56,7 @@ def run_grpc_server(model_client):
     chatglm_pb2_grpc.add_ChatGLM2RPCServicer_to_server(
         ChatGLM2RPCServicer(model_client), server
     )
-    server.add_insecure_port('[::]:10002')
+    server.add_insecure_port("[::]:10002")
     print("grpc server is running on 10002 ...")
     server.start()
     server.wait_for_termination()
-
