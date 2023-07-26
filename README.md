@@ -14,13 +14,27 @@ ChatGLM2-6B 相交前代模型在推理效果、推理速度和上下文长度�
 
 ## 项目介绍
 
-本项目是对 ChatGLM2-6B 模型能力的探索，主要包含以下组件
+本项目是对 ChatGLM2-6B 模型能力的探索
 
-### 1. websocket 模型服务
+### 项目体系结构
+
+项目的主要，如下图所示：
+
+![](https://ai-studio-static-online.cdn.bcebos.com/d63c0f803c52468aa78da15ff8ef88502883b74257b244dba34037afe39d8e0f)
+
+### 包含组件
+
+主要包含以下组件
+
+#### 1. websocket 模型服务
 
 以 websocket API 的方式访提供模型能力，解耦 Gradio 开发与模型加载，提高开发速度
 
-### 2. Gradio Web 应用展廊
+#### 2. GRPC 模型服务
+
+使用 RPC 通信的方式提供模型能力，通信效率高，支持单向流式传输方式，建议使用
+
+#### 3. Gradio Web 应用展廊
 
 1) 原生通用对话 Web 应用
 
@@ -48,20 +62,21 @@ pip install -r chatglm2_6b_explorer/requirements.txt --user
 
 通过配置环境变量来进行设置，有以下配置项
 
-| 配置项             | 说明                                                                                                                | 默认值                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| CHAT_CLIENT        | 指定使用的对话客户端，有两个客户端类型可选：<br>- ChatGLM2APIClient：通过 API 访问模型<br>- ChatGLM2ModelClient：直接访问模型 | ChatGLM2APIClient                        |
-| MODEL_WS_URL       | 模型websocket API的访问地址                                                                                             | ws://localhost:10001                     |
-| CHATGLM_MODEL_PATH | 模型的路径                                                                                                          | 默认从Huggingface下载，THUDM/chatglm2-6b |
+| 配置项             | 说明                                                                                                                             | 默认值                                   |
+| ------------------ |--------------------------------------------------------------------------------------------------------------------------------| ---------------------------------------- |
+| CHAT_CLIENT        | 指定使用的对话客户端，有两个客户端类型可选：<br>- ChatGLM2APIClient：通过 API 访问模型<br>- ChatGLM2GRPCClient：使用 GPRC 方式访问<br>- ChatGLM2ModelClient：直接访问模型 | ChatGLM2APIClient                        |
+| MODEL_WS_URL       | 模型websocket API的访问地址                                                                                                           | ws://localhost:10001                     |
+| CHATGLM_MODEL_PATH | 模型的路径                                                                                                                          | 默认从Huggingface下载，THUDM/chatglm2-6b |
 
 ### 1. `CHAT_CLIENT`
 
 `CHAT_CLIENT` 指定应用使用的对话客户端类型，有两个客户端类型可选
 
-- ChatGLM2APIClient：通过API的方式访问模型的能力（需要启动 websocket 服务，操作请看：`四、运行模型 websocket 服务`）
+- ChatGLM2APIClient：通过 API 的方式访问模型的能力（需要启动 websocket 服务，操作请看：`三、运行模型 websocket 服务`）
+- ChatGLM2GRPCClient：通过 GRPC 的方式访问模型的能力（需要启动 GRPC 服务，操作请看：`四、运行模型 GRPC 服务`）
 - ChatGLM2ModelClient：直接加载模型访问
 
-> 💡如果有开发基础，建议选择 **ChatGLM2APIClient** 方式，可以将 Gradio Web 界面开发与模型加载分离，提高开发与调试速度。
+> 💡如果有开发基础，建议选择 **ChatGLM2APIClient** 或 **ChatGLM2GRPCClient** 方式，可以将 Gradio Web 界面开发与模型加载分离，提高开发与调试速度。
 > 
 > 💡如果需要部署到Huggingface或者其他托管平台，建议使用 **ChatGLM2ModelClient** 方式，能够实现直接部署。
 > 
@@ -79,14 +94,29 @@ pip install -r chatglm2_6b_explorer/requirements.txt --user
 
 ## 三、运行模型 websocket 服务
 
-前提：安装了依赖、配置好 `CHATGLM_MODEL_PATH`
+前提：
+
+- 安装了依赖、配置好 `CHATGLM_MODEL_PATH`
+- 配置 `SERVER_TYPE=websocket`
 
 ```bash
 cd chatglm2_6b_explorer/src
 python runserver.py
 ```
 
-## 四、运行 Web 应用
+## 四、运行模型 GRPC 服务
+
+前提：
+
+- 安装了依赖、配置好 `CHATGLM_MODEL_PATH`
+- 配置 `SERVER_TYPE=grpc`
+
+```bash
+cd chatglm2_6b_explorer/src
+python runserver.py
+```
+
+## 五、运行 Web 应用
 
 ```bash
 cd chatglm2_6b_explorer/src
