@@ -62,11 +62,13 @@ pip install -r chatglm2_6b_explorer/requirements.txt --user
 
 通过配置环境变量来进行设置，有以下配置项
 
-| 配置项             | 说明                                                                                                                             | 默认值                                   |
-| ------------------ |--------------------------------------------------------------------------------------------------------------------------------| ---------------------------------------- |
+| 配置项             | 说明                                                                                                                           | 默认值                                   |
+| ------------------ |------------------------------------------------------------------------------------------------------------------------------| ---------------------------------------- |
 | CHAT_CLIENT        | 指定使用的对话客户端，有两个客户端类型可选：<br>- ChatGLM2APIClient：通过 API 访问模型<br>- ChatGLM2GRPCClient：使用 GPRC 方式访问<br>- ChatGLM2ModelClient：直接访问模型 | ChatGLM2APIClient                        |
-| MODEL_WS_URL       | 模型websocket API的访问地址                                                                                                           | ws://localhost:10001                     |
-| CHATGLM_MODEL_PATH | 模型的路径                                                                                                                          | 默认从Huggingface下载，THUDM/chatglm2-6b |
+| SERVER_TYPE        | 指定运行模型服务的类型，有两种类型：<br>- websocket: 启动 websocket 服务<br>- grpc: 启动 grpc 服务                                                     | websocket                                |
+| MODEL_WS_URL       | 访问模型 websocket API 的地址                                                                                                       | ws://localhost:10001                     |
+| MODEL_GRPC_TARGET  | 访问模型 grpc 服务的 ip 与端口                                                                                                         | localhost:10002                          |
+| CHATGLM_MODEL_PATH | 模型的路径                                                                                                                        | THUDM/chatglm2-6b，即从 Huggingface 下载 |
 
 ### 1. `CHAT_CLIENT`
 
@@ -82,12 +84,23 @@ pip install -r chatglm2_6b_explorer/requirements.txt --user
 > 
 > ❗️强烈不建议在开发的时候使用 **ChatGLM2ModelClient** 方式，导致不断加载模型，拖慢开发速度。
 
-### 2. `MODEL_WS_URL`
+### 2. `SERVER_TYPE`
+
+`SERVER_TYPE` 指定启动模型服务的类型，有两种模型服务可选：
+
+- websocket：使用 websocket 的协议提供模型能力的访问
+- grpc：使用 rpc 的协议提供模型能力的访问
+
+
+### 3. `MODEL_WS_URL`
 
 `MODEL_WS_URL` 指定模型 websocket 服务 URL，如果 `CHAT_CLIENT=ChatGLM2APIClient`，则必须填写
 
+### 4. `MODEL_GRPC_TARGET`
 
-### 3. `CHATGLM_MODEL_PATH`
+`MODEL_GRPC_TARGET` 指定模型 grpc 服务的 ip 与端口，如果 `CHAT_CLIENT=ChatGLM2GRPCClient`，则必须填写
+
+### 5. `CHATGLM_MODEL_PATH`
 
 `CHATGLM_MODEL_PATH` 指定使用的模型路径，如果是 `THUDM/chatglm2-6b` 则会从 Huggingface 拉取模型；如果指定本地模型路径，则使用本地模型。
 
