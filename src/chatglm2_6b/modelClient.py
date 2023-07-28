@@ -113,9 +113,11 @@ class FakeModelClient(object):
         return f"gRPC request generated successfully. The params are {kwags}"
 
     def stream_generate(self, **kwags):
-        yield "gRPC request stream_generate successfully. The params are:"
+        text = "gRPC request stream_generate successfully. The params are:"
+        yield text
         for k, v in kwags.items():
-            yield f"{k}: {v}"
+            text += f"\n{k}: {v}"
+            yield text
 
     def stream_chat(self, **kwags):
         history = kwags["history"]
