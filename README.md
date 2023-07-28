@@ -62,12 +62,12 @@ pip install -r chatglm2_6b_explorer/requirements.txt --user
 
 通过配置环境变量来进行设置，有以下配置项
 
-| 配置项             | 说明                                                                                                                           | 默认值                                   |
-| ------------------ |------------------------------------------------------------------------------------------------------------------------------| ---------------------------------------- |
-| CHAT_CLIENT        | 指定使用的对话客户端，有两个客户端类型可选：<br>- ChatGLM2APIClient：通过 API 访问模型<br>- ChatGLM2GRPCClient：使用 GPRC 方式访问<br>- ChatGLM2ModelClient：直接访问模型 | ChatGLM2APIClient                        |
-| SERVER_TYPE        | 指定运行模型服务的类型，有两种类型：<br>- websocket: 启动 websocket 服务<br>- grpc: 启动 grpc 服务                                                     | websocket                                |
-| MODEL_WS_URL       | 访问模型 websocket API 的地址                                                                                                       | ws://localhost:10001                     |
-| MODEL_GRPC_TARGET  | 访问模型 grpc 服务的 ip 与端口                                                                                                         | localhost:10002                          |
+| 配置项             | 说明                                                                                                                           | 默认值                                 |
+| ------------------ |------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| CHAT_CLIENT        | 指定使用的对话客户端，有两个客户端类型可选：<br>- ChatGLM2APIClient：通过 API 访问模型<br>- ChatGLM2GRPCClient：使用 GPRC 方式访问<br>- ChatGLM2ModelClient：直接访问模型 | ChatGLM2GRPCClient                   |
+| SERVER_TYPE        | 指定运行模型服务的类型，有两种类型：<br>- websocket: 启动 websocket 服务<br>- grpc: 启动 grpc 服务                                                     | grpc                                  |
+| MODEL_WS_URL       | 访问模型 websocket API 的地址                                                                                                       | ws://localhost:10001                |
+| MODEL_GRPC_TARGET  | 访问模型 grpc 服务的 ip 与端口                                                                                                         | localhost:10002                     |
 | CHATGLM_MODEL_PATH | 模型的路径                                                                                                                        | THUDM/chatglm2-6b，即从 Huggingface 下载 |
 
 ### 1. `CHAT_CLIENT`
