@@ -6,7 +6,7 @@ mdtex2html
 sentencepiece
 accelerate
 fastapi[all]
-websockets
+websockets=11.0.3
 gradio
 autoflake
 black
