@@ -1,6 +1,7 @@
 import gradio as gr
 
-from apps import instruction_chat_demo, simple_chat_demo, translator_demo
+from apps import (content_moderation_demo, instruction_chat_demo,
+                  paper_preview_demo, simple_chat_demo, translator_demo)
 from chatClient import (ChatClient, ChatGLM2APIClient, ChatGLM2GRPCClient,
                         ChatGLM2ModelClient)
 from config import Settings
@@ -11,6 +12,8 @@ demo_register = {
     "通用对话": simple_chat_demo,
     "预设指令对话": instruction_chat_demo,
     "翻译器": translator_demo,
+    "内容审查": content_moderation_demo,
+    "论文速览": paper_preview_demo,
 }
 
 
