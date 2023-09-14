@@ -47,6 +47,9 @@ ChatGLM2-6B 相交前代模型在推理效果、推理速度和上下文长度�
 3) 翻译器
 
    ![](https://ai-studio-static-online.cdn.bcebos.com/68deb5f5d57a4ce6957bbf96b912f3829c4271ff7e144b9889212adf01dc5d53)
+
+4) 内容审查
+5) 论文速览
    
 > Gradio Web 应用参考 [Falcon-Chat demo](https://huggingface.co/spaces/HuggingFaceH4/falcon-chat)
 
