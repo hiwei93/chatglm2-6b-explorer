@@ -36,10 +36,12 @@ def paper_preview_demo(client):
                 top_p=top_p,
             )
             for resp, _ in stream:
-                pass
-            return resp
+                yield resp
         except Exception:
-            return traceback.format_exc()
+            yield traceback.format_exc()
+
+    def clear_data():
+        return None, None
 
     with gr.Row():
         with gr.Column():
@@ -54,8 +56,30 @@ def paper_preview_demo(client):
 
         with gr.Column():
             outputs = gr.Textbox(label="速览内容", lines=5)
+            gr.Examples(
+                [
+                    [
+                        "GLM: General Language Model Pretraining with Autoregressive Blank Infilling",
+                        "There have been various types of pretraining architectures including autoencoding models "
+                        "(e.g., BERT), autoregressive models (e.g., GPT), and encoder-decoder models (e.g., T5). "
+                        "However, none of the pretraining frameworks performs the best for all tasks of three main "
+                        "categories including natural language understanding (NLU), unconditional generation, and "
+                        "conditional generation. We propose a General Language Model (GLM) based on autoregressive "
+                        "blank infilling to address this challenge. GLM improves blank filling pretraining by adding 2D"
+                        " positional encodings and allowing an arbitrary order to predict spans, which results in "
+                        "performance gains over BERT and T5 on NLU tasks. Meanwhile, GLM can be pretrained for "
+                        "different types of tasks by varying the number and lengths of blanks. On a wide range of tasks"
+                        " across NLU, conditional and unconditional generation, GLM outperforms BERT, T5, and GPT given"
+                        " the same model sizes and data, and achieves the best performance from a single pretrained "
+                        "model with 1.25x parameters of BERT Large , demonstrating its generalizability to different"
+                        " downstream tasks.",
+                    ]
+                ],
+                [title, abstract],
+                label="样例",
+            )
 
         submit.click(
             preview, inputs=[title, abstract, temperature, top_p], outputs=outputs
         )
-        clear.click(lambda x: (None, None), inputs=None, outputs=[title, abstract])
+        clear.click(clear_data, inputs=None, outputs=[title, abstract])
